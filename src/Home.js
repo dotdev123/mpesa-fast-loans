@@ -302,10 +302,21 @@ function Home() {
                   </button>
                 </>
               ) : (
+                /* SUCCESS STATE - Logo + Checkmark */
                 <div className="text-center py-4">
-                  <FaCheckCircle className="text-mpesa-500 text-5xl mx-auto mb-4" />
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <img 
+                      src={logo} 
+                      alt="Logo" 
+                      className="w-12 h-12 object-contain rounded-lg"
+                    />
+                    <FaCheckCircle className="text-mpesa-500 text-5xl" />
+                  </div>
+
                   <h3 className="font-bold text-dark-900 text-lg mb-1">Verification Completed</h3>
-                  <p className="text-sm text-gray-500 mb-6">Your phone number has been verified successfully.</p>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Your phone number has been verified successfully.
+                  </p>
 
                   <button
                     onClick={handleApplyNow}

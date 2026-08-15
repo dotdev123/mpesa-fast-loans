@@ -86,7 +86,7 @@ function Application() {
       const reference = `mml_${Date.now()}`;
 
       // 1. Initiate STK Push
-      const response = await fetch('/api/stk-push', {
+      const response = await fetch('/api/paylor-stk-push', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -122,7 +122,7 @@ function Application() {
       attempts++;
 
       try {
-        const res = await fetch(`/api/paylor-status?reference=${reference}`);
+        const res = await fetch(`/api/paylor-transaction-status?reference=${reference}`);
         const data = await res.json();
 
         if (!data.success) return;
