@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
 import logo from './assets/logo.jpg';
+import LiveUpdates from './liveUpdates';
 
 const loanPackages = [
   { name: 'Basic', amount: 3000, fee: 99 },
@@ -105,7 +106,7 @@ function Home() {
         </nav>
 
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-mpesa-50 to-white px-5 pt-8 pb-10">
+        <section className="bg-gradient-to-b from-mpesa-50 to-white px-5 pt-8 pb-6">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-mpesa-100 text-mpesa-700 text-xs font-medium px-3 py-1.5 rounded-full mb-5">
               <span className="w-1.5 h-1.5 bg-mpesa-500 rounded-full animate-pulse"></span>
@@ -128,6 +129,9 @@ function Home() {
             </button>
           </div>
         </section>
+
+        {/* Live Updates - Right below the Apply button */}
+        <LiveUpdates />
 
         {/* Loan Packages */}
         <section id="packages" className="px-4 py-8">
