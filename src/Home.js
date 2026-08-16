@@ -4,11 +4,11 @@ import { FaCheckCircle } from 'react-icons/fa';
 import logo from './assets/logo.jpg';
 
 const loanPackages = [
-  { name: 'Basic', amount: 3000, fee: 49 },
-  { name: 'Starter', amount: 5000, fee: 99 },
-  { name: 'Lite', amount: 8000, fee: 120, badge: 'Popular', badgeColor: 'bg-blue-500' },
-  { name: 'Standard', amount: 10000, fee: 150 },
-  { name: 'Bronze', amount: 15000, fee: 225 },
+  { name: 'Basic', amount: 3000, fee: 99 },
+  { name: 'Starter', amount: 5000, fee: 150 },
+  { name: 'Lite', amount: 8000, fee: 200, badge: 'Popular', badgeColor: 'bg-blue-500' },
+  { name: 'Standard', amount: 10000, fee: 250 },
+  { name: 'Bronze', amount: 15000, fee: 275 },
   { name: 'Silver', amount: 20000, fee: 300 },
   { name: 'Gold', amount: 25000, fee: 375, badge: 'Best Value', badgeColor: 'bg-orange-500' },
   { name: 'Platinum', amount: 30000, fee: 450 },
