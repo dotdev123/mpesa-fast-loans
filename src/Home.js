@@ -87,7 +87,6 @@ function Home() {
     <div className="min-h-screen bg-gray-50 font-sans flex justify-center">
       <div className="w-full max-w-md bg-white min-h-screen shadow-xl relative">
         
-        {/* Navbar */}
         <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img 
