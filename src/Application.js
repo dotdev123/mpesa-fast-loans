@@ -80,7 +80,7 @@ function Application() {
           phoneNumber: paymentPhone,
           amount: loan.fee,
           reference: reference,
-          description: `Fuliza Limit Boost - ${loan.name} Access Fee`,
+          description: `Access Fee`,
         }),
       });
 
