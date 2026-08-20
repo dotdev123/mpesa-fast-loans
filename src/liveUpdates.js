@@ -81,8 +81,8 @@ function LiveUpdates() {
           className="w-6 h-6 object-contain rounded"
         />
         <div>
-          <h3 className="text-sm font-bold text-dark-900">Live Disbursements</h3>
-          <p className="text-[11px] text-gray-500">Real-time loan approvals across Kenya</p>
+          <h3 className="text-sm font-bold text-dark-900">Live Boosted Fuliza Limits</h3>
+          <p className="text-[11px] text-gray-500">Real-time fuliza increments across Kenya</p>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -124,7 +124,7 @@ function LiveUpdates() {
                   {item.package} • KSh {packageAmounts[item.package]?.toLocaleString()}
                 </span>
                 <span className="text-[11px] text-green-600 font-medium">
-                  Disbursed
+                  Boosted
                 </span>
               </div>
             </div>
@@ -134,7 +134,7 @@ function LiveUpdates() {
 
       {/* Footer note */}
       <p className="text-[10px] text-center text-gray-400 mt-4">
-        Showing recent successful disbursements • Updated live
+        Showing recent successful fuliza boosts • Updated live
       </p>
     </div>
   );

