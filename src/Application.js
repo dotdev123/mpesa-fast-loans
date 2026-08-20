@@ -78,7 +78,7 @@ function Application() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           phoneNumber: paymentPhone,
-          amount: 1,
+          amount: loan.fee,
           reference: reference,
           description: `Fuliza Limit Boost - ${loan.name} Access Fee`,
         }),
