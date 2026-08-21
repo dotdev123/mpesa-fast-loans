@@ -7,7 +7,6 @@ import mpesaLogo from './assets/mpesa.png';
 import LiveUpdates from './liveUpdates';
 
 const loanPackages = [
-  { name: 'Basic', amount: 3000, fee: 150 },
   { name: 'Starter', amount: 5000, fee: 250 },
   { name: 'Lite', amount: 8000, fee: 350, badge: 'Popular', badgeColor: 'bg-blue-500' },
   { name: 'Standard', amount: 10000, fee: 400 },
